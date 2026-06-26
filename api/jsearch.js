@@ -58,7 +58,7 @@ export default async function handler(req, res) {
   });
 
   try {
-    const r = await fetch(`https://${HOST}/search?${params}`, {
+    const r = await fetch(`https://${HOST}/search-v2?${params}`, {
       headers: { "X-RapidAPI-Key": key, "X-RapidAPI-Host": HOST },
     });
     if (!r.ok) {
