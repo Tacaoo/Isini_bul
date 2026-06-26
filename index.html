@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>İş Radarı — Almanya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EBEEF2; --card:#FFFFFF; --ink:#14171C; --steel:#27496D;
+    --signal:#E2521A; --muted:#6B7280; --line:#D4DAE1; --warm:#F0F2F5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+
+  header{padding:34px 0 18px}
+  .kicker{font-family:'Space Grotesk';font-weight:600;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--steel);display:flex;align-items:center;gap:8px}
+  .kicker::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--signal);
+    animation:ping 2.4s ease-out infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(226,82,26,.45)}70%{box-shadow:0 0 0 11px rgba(226,82,26,0)}100%{box-shadow:0 0 0 0 rgba(226,82,26,0)}}
+  h1{font-family:'Space Grotesk';font-weight:700;font-size:38px;letter-spacing:-.02em;margin:8px 0 4px;line-height:1.05}
+  .sub{color:var(--muted);font-size:15px}
+
+  .tabs{display:flex;gap:5px;margin-top:20px;background:#DEE3E9;padding:5px;border-radius:12px}
+  .tab{flex:1;font-family:'Space Grotesk';font-weight:600;font-size:13.5px;border:none;
+    background:transparent;color:var(--muted);padding:10px 6px;border-radius:8px;cursor:pointer;transition:.15s}
+  .tab.active{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(20,23,28,.1)}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px;margin-top:12px;display:grid;gap:12px;grid-template-columns:1fr 1fr}
+  .panel[hidden]{display:none}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field.full{grid-column:1 / -1}
+  label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .hint{font-size:11.5px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+  input,select{font-family:inherit;font-size:15px;color:var(--ink);border:1px solid var(--line);
+    border-radius:9px;padding:11px 12px;background:var(--warm);transition:border-color .15s,background .15s}
+  input:focus,select:focus{outline:none;border-color:var(--steel);background:#fff}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;grid-column:1 / -1}
+  .seg{grid-column:1 / -1;display:flex;gap:6px;background:var(--warm);border:1px solid var(--line);border-radius:9px;padding:4px}
+  .seg button{flex:1;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:500;color:var(--muted);padding:8px 4px;border-radius:6px;cursor:pointer}
+  .seg button.on{background:var(--steel);color:#fff}
+  button.go{grid-column:1 / -1;font-family:'Space Grotesk';font-weight:600;font-size:16px;color:#fff;
+    background:var(--steel);border:none;border-radius:9px;padding:13px;cursor:pointer;transition:background .15s}
+  button.go:hover{background:#1d3a57}
+  button.go:disabled{opacity:.55;cursor:wait}
+
+  .meta{display:flex;justify-content:space-between;align-items:baseline;margin:26px 2px 12px;font-size:14px;color:var(--muted)}
+  .meta strong{font-family:'Space Grotesk';color:var(--ink);font-size:15px}
+
+  .list{display:flex;flex-direction:column;gap:12px}
+  .job{background:var(--card);border:1px solid var(--line);border-radius:13px;display:flex;
+    overflow:hidden;text-decoration:none;color:inherit;transition:transform .12s,box-shadow .12s,border-color .12s}
+  .job:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(20,23,28,.08);border-color:#bcc6d1}
+  .rail{flex:0 0 76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:14px 6px;color:#fff;text-align:center}
+  .rail .num{font-family:'Space Grotesk';font-weight:700;font-size:24px;line-height:1}
+  .rail .unit{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.9}
+  .body{padding:14px 16px;flex:1;min-width:0}
+  .title{font-family:'Space Grotesk';font-weight:600;font-size:17px;letter-spacing:-.01em;margin-bottom:4px}
+  .emp{font-size:14px;color:var(--steel);font-weight:500}
+  .via{color:var(--muted);font-weight:400;font-size:12.5px}
+  .loc{font-size:13px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:5px}
+  .loc svg{flex:0 0 13px}
+  .snippet{font-size:13px;color:#4B5563;margin-top:9px;line-height:1.45;border-left:2px solid var(--line);padding-left:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+  .chip{font-size:11px;font-weight:600;background:#FCEAE0;color:var(--signal);padding:3px 8px;border-radius:20px;text-transform:lowercase}
+
+  .empty,.error{text-align:center;padding:48px 20px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:13px}
+  .error{color:var(--signal);border-color:var(--signal)}
+  .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Launcher */
+  .launch{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .launch h2{font-family:'Space Grotesk';font-size:19px;font-weight:700;letter-spacing:-.01em;margin-bottom:3px}
+  .launch p.lead{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+  .launch .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .grp-label{font-family:'Space Grotesk';font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:6px 0 8px}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+  .lbtn{display:flex;align-items:center;gap:8px;text-align:left;font-family:inherit;font-size:14px;font-weight:500;
+    color:var(--ink);background:var(--warm);border:1px solid var(--line);border-radius:9px;padding:11px 12px;cursor:pointer;transition:.13s}
+  .lbtn:hover{border-color:var(--steel);background:#fff;transform:translateY(-1px)}
+  .lbtn .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+
+  @media(max-width:560px){
+    h1{font-size:31px}
+    .panel{grid-template-columns:1fr}
+    .row2{grid-template-columns:1fr 1fr}
+    .rail{flex-basis:62px}
+    .links{grid-template-columns:1fr}
+    .tab{font-size:12.5px}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">canlı tarama · almanya geneli</div>
+    <h1>İş Radarı</h1>
+    <p class="sub">Resmi havuz + Indeed/LinkedIn + Türkçe siteler. En yeni ilan en üstte.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="title">Resmi · başlık</button>
+    <button class="tab" data-tab="deep">Resmi · içerik</button>
+    <button class="tab" data-tab="js">Indeed / LinkedIn</button>
+  </div>
+
+  <!-- SEKME 1: RESMİ BAŞLIK -->
+  <div class="panel" id="panel-title">
+    <div class="field full"><label for="t-was">Meslek / Anahtar kelime</label>
+      <input id="t-was" value="CNC-Programmierer" /></div>
+    <div class="row2">
+      <div class="field"><label for="t-wo">Şehir</label><input id="t-wo" value="München" /></div>
+      <div class="field"><label for="t-um">Yarıçap (km)</label>
+        <select id="t-um"><option>25</option><option>50</option><option selected>100</option><option>200</option></select></div>
+    </div>
+    <div class="field full"><label for="t-az">Çalışma şekli</label>
+      <select id="t-az"><option value="">Hepsi</option><option value="vz">Tam zamanlı</option>
+        <option value="tz">Yarı zamanlı</option><option value="ho">Home office</option><option value="mj">Minijob</option></select></div>
+    <button class="go" id="t-go">İlanları tara</button>
+  </div>
+
+  <!-- SEKME 2: RESMİ İÇERİK -->
+  <div class="panel" id="panel-deep" hidden>
+    <div class="field full"><label for="d-words">İçerikte geçsin <span class="hint">— virgülle: CNC, Holz, 5-Achs</span></label>
+      <input id="d-words" value="CNC, Holz" /></div>
+    <div class="field full"><label for="d-was">Meslek / alan <span class="hint">— opsiyonel, hızlandırır</span></label>
+      <input id="d-was" value="Tischler" /></div>
+    <div class="row2">
+      <div class="field"><label for="d-wo">Şehir</label><input id="d-wo" value="München" /></div>
+      <div class="field"><label for="d-um">Yarıçap (km)</label>
+        <select id="d-um"><option>25</option><option>50</option><option selected>100</option><option>200</option></select></div>
+    </div>
+    <div class="seg" id="d-modus">
+      <button data-m="any" class="on">Herhangi biri</button>
+      <button data-m="all">Hepsi geçsin</button>
+    </div>
+    <button class="go" id="d-go">İçerikte tara</button>
+  </div>
+
+  <!-- SEKME 3: INDEED / LINKEDIN (JSearch) -->
+  <div class="panel" id="panel-js" hidden>
+    <div class="field full"><label for="j-was">Meslek / Anahtar kelime
+      <span class="hint">— Indeed, LinkedIn, Glassdoor vb. (Google Jobs)</span></label>
+      <input id="j-was" value="CNC Programmierer" /></div>
+    <div class="row2">
+      <div class="field"><label for="j-wo">Şehir</label><input id="j-wo" value="München" /></div>
+      <div class="field"><label for="j-when">Tarih</label>
+        <select id="j-when"><option value="all">Tümü</option><option value="today">Bugün</option>
+          <option value="3days">Son 3 gün</option><option value="week" selected>Son hafta</option><option value="month">Son ay</option></select></div>
+    </div>
+    <div class="field full"><label for="j-lang">Dil</label>
+      <select id="j-lang"><option value="de">Almanca ilanlar</option>
+        <option value="tr">Türkçe ilanlar</option><option value="en">İngilizce ilanlar</option></select></div>
+    <button class="go" id="j-go">Geniş ağda tara</button>
+  </div>
+
+  <div class="meta" id="meta" hidden>
+    <span id="count"></span><span>en yeni ↑</span>
+  </div>
+  <div class="list" id="list"></div>
+
+  <!-- TÜRKÇE FIRLATICI -->
+  <section class="launch">
+    <h2>Türkçe siteler &amp; daha fazlası</h2>
+    <p class="lead">Bu siteler API vermiyor, ama her butonun kendi aramasını senin kelimenle açar. Yeni sekmede açılır — tek tek bakman 30 saniye sürer.</p>
+    <div class="row2">
+      <div class="field"><label for="l-kw">Kelime</label><input id="l-kw" value="CNC" /></div>
+      <div class="field"><label for="l-city">Şehir</label><input id="l-city" value="München" /></div>
+    </div>
+
+    <div class="grp-label">Türkçe ilan siteleri</div>
+    <div class="links" id="links-tr"></div>
+
+    <div class="grp-label" style="margin-top:14px">Büyük siteler (kendi arama sayfası)</div>
+    <div class="links" id="links-big"></div>
+  </section>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const list=$('list'), meta=$('meta'), count=$('count');
+let modus='any';
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  const v=t.dataset.tab;
+  $('panel-title').hidden = v!=='title';
+  $('panel-deep').hidden  = v!=='deep';
+  $('panel-js').hidden    = v!=='js';
+}));
+$('d-modus').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  $('d-modus').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); modus=b.dataset.m;
+}));
+
+function freshness(d){if(d<=2)return'#E2521A';if(d<=7)return'#C2622E';if(d<=21)return'#5B7493';return'#8A929D';}
+function daysAgo(iso){if(!iso)return 999;return Math.max(0,Math.floor((Date.now()-new Date(iso).getTime())/86400000));}
+function pin(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function render(jobs){
+  list.innerHTML='';
+  if(!jobs.length){list.innerHTML='<div class="empty">Bu kriterlerle ilan bulunamadı.<br>Kelime veya yarıçapı değiştir.</div>';meta.hidden=true;return;}
+  meta.hidden=false; count.innerHTML='<strong>'+jobs.length+'</strong> ilan';
+  for(const j of jobs){
+    const days=daysAgo(j.aktuelleVeroeffentlichungsdatum);
+    const ort=(j.arbeitsort&&j.arbeitsort.ort)||'', plz=(j.arbeitsort&&j.arbeitsort.plz)||'';
+    const href=j.externeUrl||('https://www.arbeitsagentur.de/jobsuche/jobdetail/'+encodeURIComponent(j.refnr||''));
+    const via=j._source?' <span class="via">· '+esc(j._source)+'</span>':'';
+    const chips=(j._hits&&j._hits.length)?'<div class="chips">'+j._hits.map(h=>'<span class="chip">'+esc(h)+'</span>').join('')+'</div>':'';
+    const snip=j._snippet?'<div class="snippet">'+esc(j._snippet)+'</div>':'';
+    const a=document.createElement('a');a.className='job';a.href=href;a.target='_blank';a.rel='noopener';
+    a.innerHTML='<div class="rail" style="background:'+freshness(days)+'"><span class="num">'+(days>99?'99+':days)+'</span><span class="unit">gün önce</span></div>'+
+      '<div class="body"><div class="title">'+esc(j.titel||j.beruf||'İlan')+'</div>'+
+      '<div class="emp">'+esc(j.arbeitgeber||'—')+via+'</div>'+
+      (ort?'<div class="loc">'+pin()+esc([plz,ort].filter(Boolean).join(' '))+'</div>':'')+chips+snip+'</div>';
+    list.appendChild(a);
+  }
+}
+function sortNewest(j){return j.sort((a,b)=>new Date(b.aktuelleVeroeffentlichungsdatum||0)-new Date(a.aktuelleVeroeffentlichungsdatum||0));}
+
+async function run(url,btn,txt){
+  btn.disabled=true;const orig=btn.textContent;btn.innerHTML='<span class="spinner"></span>'+txt;
+  list.innerHTML='';meta.hidden=true;
+  try{
+    const r=await fetch(url);if(!r.ok)throw new Error('Sunucu hatası ('+r.status+')');
+    const data=await r.json();
+    if(data.error==='no_key'){list.innerHTML='<div class="error">'+esc(data.message)+'</div>';return;}
+    render(sortNewest(data.stellenangebote||[]));
+  }catch(e){
+    list.innerHTML='<div class="error">Tarama başarısız: '+esc(e.message)+
+      '<br><span style="color:var(--muted)">Çift tıklayınca /api çalışmaz — Vercel linkinden dene.</span></div>';
+  }finally{btn.disabled=false;btn.textContent=orig;}
+}
+
+$('t-go').addEventListener('click',()=>{
+  const q=new URLSearchParams({was:$('t-was').value.trim(),wo:$('t-wo').value.trim(),umkreis:$('t-um').value,size:'60'});
+  if($('t-az').value)q.set('arbeitszeit',$('t-az').value);
+  run('/api/jobs?'+q,$('t-go'),'Taranıyor…');
+});
+$('d-go').addEventListener('click',()=>{
+  const w=$('d-words').value.trim();
+  if(!w){list.innerHTML='<div class="empty">Aranacak kelime gir (virgülle çoklu).</div>';return;}
+  const q=new URLSearchParams({enthalten:w,was:$('d-was').value.trim(),wo:$('d-wo').value.trim(),umkreis:$('d-um').value,modus,limit:'50'});
+  run('/api/jobs-deep?'+q,$('d-go'),'İlan metinleri okunuyor…');
+});
+$('j-go').addEventListener('click',()=>{
+  const q=new URLSearchParams({was:$('j-was').value.trim(),wo:$('j-wo').value.trim(),
+    language:$('j-lang').value,date_posted:$('j-when').value});
+  run('/api/jsearch?'+q,$('j-go'),'Geniş ağ taranıyor…');
+});
+
+/* ---------- FIRLATICI ---------- */
+const enc=encodeURIComponent;
+// site:domain araması her sitenin içini güvenilir şekilde tarar
+const g=(domain,kw,city)=>'https://www.google.com/search?q='+enc('site:'+domain+' '+kw+' '+city);
+
+const TR_SITES=[
+  {name:'Almanilan.com',  c:'#E2521A', url:(k,c)=>g('almanilan.com',k,c)},
+  {name:'Careerlande',    c:'#27496D', url:(k,c)=>g('careerlande.com',k,c)},
+  {name:'Almanyaİşİlanı', c:'#2E7D5B', url:(k,c)=>g('almanyaisilani.de',k,c)},
+  {name:'Turkiye.de',     c:'#9C4DCC', url:(k,c)=>g('turkiye.de',k,c)},
+  {name:'Almanya-İlanlar',c:'#C2622E', url:(k,c)=>g('almanya-ilanlar.de',k,c)},
+  {name:'Facebook grupları',c:'#1877F2',url:(k,c)=>'https://www.facebook.com/search/groups/?q='+enc(k+' '+c+' iş ilanı almanya')},
+];
+const BIG_SITES=[
+  {name:'Indeed',   c:'#2557A7', url:(k,c)=>'https://de.indeed.com/jobs?q='+enc(k)+'&l='+enc(c)},
+  {name:'LinkedIn', c:'#0A66C2', url:(k,c)=>'https://www.linkedin.com/jobs/search/?keywords='+enc(k)+'&location='+enc(c)},
+  {name:'StepStone',c:'#004B23', url:(k,c)=>g('stepstone.de',k,c)},
+  {name:'Hokify',   c:'#FF6B35', url:(k,c)=>g('hokify.de',k,c)},
+];
+
+function makeBtn(site,box){
+  const k=$('l-kw').value.trim()||'is', c=$('l-city').value.trim()||'';
+  const b=document.createElement('button');b.className='lbtn';
+  b.innerHTML='<span class="dot" style="background:'+site.c+'"></span>'+esc(site.name);
+  b.addEventListener('click',()=>window.open(site.url(k,c),'_blank','noopener'));
+  box.appendChild(b);
+}
+function buildLaunchers(){
+  $('links-tr').innerHTML='';$('links-big').innerHTML='';
+  TR_SITES.forEach(s=>makeBtn(s,$('links-tr')));
+  BIG_SITES.forEach(s=>makeBtn(s,$('links-big')));
+}
+['l-kw','l-city'].forEach(id=>$(id).addEventListener('input',buildLaunchers));
+buildLaunchers();
+
+['t-was','t-wo'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('t-go').click()}));
+['d-words','d-wo'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('d-go').click()}));
+['j-was','j-wo'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('j-go').click()}));
+</script>
+</body>
+</html>
