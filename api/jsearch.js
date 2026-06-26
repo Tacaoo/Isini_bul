@@ -13,19 +13,19 @@ const HOST = "jsearch.p.rapidapi.com";
 
 // JSearch sonucunu, diğer sekmelerle aynı kart şekline çeviriyoruz
 function normalize(j) {
+  const loc = j.job_location || [j.job_city, j.job_state, j.job_country].filter(Boolean).join(", ");
   const desc = (j.job_description || "").replace(/\s+/g, " ").trim();
   return {
     titel: j.job_title || "İlan",
     arbeitgeber: j.employer_name || "—",
-    arbeitsort: { ort: j.job_city || j.job_location || "", plz: "" },
-    aktuelleVeroeffentlichungsdatum: j.job_posted_at_datetime_utc || null,
+    arbeitsort: { ort: loc || "", plz: "" },
+    aktuelleVeroeffentlichungsdatum: j.job_posted_at_datetime_utc || j.job_posted_at || null,
     refnr: j.job_id || "",
     externeUrl: j.job_apply_link || j.job_google_link || "",
     _snippet: desc ? desc.slice(0, 170) + (desc.length > 170 ? " …" : "") : "",
     _source: j.job_publisher || "Google Jobs",
   };
 }
-
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -67,7 +67,8 @@ export default async function handler(req, res) {
         .json({ stellenangebote: [], error: "upstream", status: r.status });
     }
     const data = await r.json();
-    const jobs = (data.data || []).map(normalize);
+    const arr = data.data?.jobs || data.data || [];
+const jobs = arr.map(normalize);
     res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
     return res.status(200).json({ stellenangebote: jobs });
   } catch (e) {
